@@ -1,8 +1,10 @@
 // All user-facing text lives here (RNF-15), so other languages can be added later.
 export const messages = {
   appName: "Odd Loop",
+  loading: "Cargando…",
   home: {
-    title: "Odd Loop",
+    title: "Mi trabajo",
+    empty: "Aquí verás tus tareas cuando existan proyectos.",
     subtitle: "Gestor de trabajo para tu equipo",
   },
   health: {
@@ -16,4 +18,90 @@ export const messages = {
     button: "Probar aviso",
     text: "Los avisos aparecen aquí.",
   },
+  nav: {
+    main: "Navegación principal",
+    home: "Mi trabajo",
+    team: "Equipo",
+    account: "Mi cuenta",
+    logout: "Cerrar sesión",
+  },
+  roles: {
+    admin: "Administrador",
+    leader: "Líder",
+    member: "Miembro",
+  },
+  login: {
+    title: "Iniciar sesión",
+    email: "Correo",
+    password: "Contraseña",
+    submit: "Entrar",
+    submitting: "Entrando…",
+  },
+  password: {
+    forcedTitle: "Cambia tu contraseña",
+    forcedHelp: "Tu contraseña es temporal. Elige una nueva para continuar.",
+    current: "Contraseña actual",
+    new: "Contraseña nueva",
+    confirm: "Repite la contraseña nueva",
+    submit: "Cambiar contraseña",
+    mismatch: "Las contraseñas nuevas no coinciden.",
+    done: "Contraseña cambiada.",
+  },
+  team: {
+    title: "Equipo",
+    create: "Crear cuenta",
+    columns: { name: "Nombre", email: "Correo", role: "Rol", status: "Estado", actions: "Acciones" },
+    active: "Activo",
+    inactive: "Desactivado",
+    deactivate: "Desactivar",
+    activate: "Reactivar",
+    resetPassword: "Restablecer contraseña",
+    createTitle: "Crear cuenta",
+    createHelp: "La contraseña es temporal: la persona deberá cambiarla al entrar.",
+    resetTitle: "Restablecer contraseña de {name}",
+    tempPassword: "Contraseña temporal",
+    name: "Nombre",
+    email: "Correo",
+    role: "Rol",
+    save: "Guardar",
+    cancel: "Cancelar",
+    created: "Cuenta creada.",
+    updated: "Cambios guardados.",
+    resetDone: "Contraseña restablecida.",
+    you: "tú",
+  },
+  account: {
+    title: "Mi cuenta",
+    profile: "Perfil",
+    name: "Nombre",
+    email: "Correo",
+    role: "Rol",
+    saveName: "Guardar nombre",
+    saved: "Cambios guardados.",
+    passwordTitle: "Contraseña",
+    soundTitle: "Sonido",
+    soundLabel: "Sonidos de avisos",
+    soundHelp: "Sonidos cortos al recibir una asignación, una mención o terminar una tarea.",
+    soundTest: "Probar sonidos",
+    sounds: { assigned: "Asignación", mention: "Mención", done: "Tarea terminada", error: "Error" },
+  },
+  errors: {
+    invalid_credentials: "Correo o contraseña incorrectos.",
+    invalid_input: "Revisa los datos: hay algo con formato incorrecto.",
+    invalid_password: "La contraseña no puede estar vacía.",
+    wrong_password: "La contraseña actual no es correcta.",
+    same_password: "Elige una contraseña distinta a la actual.",
+    unauthenticated: "Tu sesión terminó. Inicia sesión otra vez.",
+    forbidden: "No tienes permiso para hacer esto.",
+    not_found: "No se encontró ese integrante.",
+    email_taken: "Ya existe una cuenta con ese correo.",
+    last_admin: "No se puede desactivar ni cambiar el rol del último administrador.",
+    unknown: "Algo salió mal. Inténtalo de nuevo.",
+  },
 } as const;
+
+export type ErrorCode = keyof typeof messages.errors;
+
+export function errorMessage(code: string): string {
+  return code in messages.errors ? messages.errors[code as ErrorCode] : messages.errors.unknown;
+}

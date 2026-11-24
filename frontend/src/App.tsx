@@ -1,16 +1,25 @@
-import { HealthCard } from "@/HealthCard";
-import { messages } from "@/messages";
+import { Navigate, Route, Routes } from "react-router";
+import { LoginPage } from "@/features/auth/LoginPage";
+import { AdminOnly, RequireAuth } from "@/features/auth/guards";
+import { AppLayout } from "@/layout/AppLayout";
+import { AccountPage } from "@/pages/AccountPage";
+import { HomePage } from "@/pages/HomePage";
+import { TeamPage } from "@/pages/TeamPage";
 
 export function App() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-6 p-6">
-      <header className="text-center">
-        <h1 className="text-4xl font-semibold tracking-tight">
-          Odd <span className="text-primary">Loop</span>
-        </h1>
-        <p className="text-muted-foreground mt-2">{messages.home.subtitle}</p>
-      </header>
-      <HealthCard />
-    </main>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route element={<RequireAuth />}>
+        <Route element={<AppLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="cuenta" element={<AccountPage />} />
+          <Route element={<AdminOnly />}>
+            <Route path="equipo" element={<TeamPage />} />
+          </Route>
+        </Route>
+      </Route>
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
