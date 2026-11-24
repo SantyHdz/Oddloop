@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+*.ovpn
+*.pem
+*.key
+*.sql
+*.dump
+*.log
+.DS_Store
+
+# backend/ y frontend/ son repositorios git propios
+backend/
+frontend/
