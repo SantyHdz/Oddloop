@@ -14,7 +14,11 @@ copy .env.example .env      # y cambia POSTGRES_PASSWORD por una contraseña pro
 docker compose up -d --build
 ```
 
-Abre http://localhost:3000. Si todo va bien, la tarjeta "Estado del sistema" dice que el servidor y la base de datos están conectados.
+Abre http://localhost:3000. Te pedirá iniciar sesión.
+
+**Primer ingreso:** al arrancar por primera vez, el backend crea el administrador inicial con `ADMIN_EMAIL`, `ADMIN_NAME` y `ADMIN_PASSWORD` de tu `.env` (solo si todavía no existe ningún administrador). Esa contraseña es temporal: al entrar te obliga a cambiarla. Después, desde "Equipo", el administrador crea las demás cuentas.
+
+Dentro, en "Mi trabajo", la tarjeta "Estado del sistema" confirma que el servidor y la base de datos están conectados.
 
 ## Día a día
 
