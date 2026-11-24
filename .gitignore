@@ -11,6 +11,5 @@ dist/
 *.log
 .DS_Store
 
-# backend/ y frontend/ son repositorios git propios
-backend/
-frontend/
+# las migraciones de Drizzle son .sql y SI se versionan
+!backend/drizzle/**/*.sql
