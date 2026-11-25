@@ -13,4 +13,4 @@ Todos los archivos vienen del pack **UI Sounds** de **HaelDB**, publicado en Ope
 | `done.wav` | Tarea terminada | `#1.wav` |
 | `error.wav` | Una acción falló | `Wrong Error.wav` |
 
-Los archivos no se modificaron, solo se renombraron.
+Cambios hechos a los archivos (permitido por la licencia CC0): se renombraron, se convirtieron a WAV de 16 bits y se normalizó su volumen a −20 dBFS de nivel medio, con picos por debajo de −1 dBFS, porque los originales sonaban muy bajos y con niveles muy distintos entre sí.
