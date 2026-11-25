@@ -21,10 +21,14 @@ services:
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
       PORT: "3001"
+      ATTACHMENTS_DIR: /data/attachments
       # First administrator, created only if no admin exists yet (REQUISITOS 9.2).
       ADMIN_EMAIL: ${ADMIN_EMAIL:-}
       ADMIN_NAME: ${ADMIN_NAME:-}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+    volumes:
+      # Attachments live outside the container, like the database (RNF-19).
+      - attachments:/data/attachments
     depends_on:
       db:
         condition: service_healthy
@@ -40,3 +44,4 @@ services:
 
 volumes:
   db-data:
+  attachments:

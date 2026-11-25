@@ -1,16 +1,31 @@
 import cookie from "@fastify/cookie";
+import multipart from "@fastify/multipart";
 import Fastify from "fastify";
 import { ZodError } from "zod";
 import type { Accounts } from "./accounts/service.js";
+import { createRequireAuth } from "./auth/hook.js";
 import { AppError } from "./errors.js";
+import { registerProjectRoutes } from "./projects/routes.js";
+import type { Projects } from "./projects/service.js";
 import { registerRoutes } from "./routes.js";
+import { MAX_ATTACHMENT_BYTES, registerTaskRoutes } from "./tasks/routes.js";
+import type { TasksService } from "./tasks/service.js";
 
 // Receives the DB check as a function so the route can be tested without a database.
 export type DbCheck = () => Promise<void>;
 
-export function buildApp(deps: { checkDb: DbCheck; accounts: Accounts }, logger = false) {
+export interface AppDeps {
+  checkDb: DbCheck;
+  accounts: Accounts;
+  projects: Projects;
+  tasks: TasksService;
+  attachmentsDir: string;
+}
+
+export function buildApp(deps: AppDeps, logger = false) {
   const app = Fastify({ logger });
   app.register(cookie);
+  app.register(multipart, { limits: { fileSize: MAX_ATTACHMENT_BYTES, files: 1 } });
 
   // Every error leaves as { error: { code, message } }; the frontend translates the code.
   app.setErrorHandler((error, _request, reply) => {
@@ -35,6 +50,9 @@ export function buildApp(deps: { checkDb: DbCheck; accounts: Accounts }, logger 
     }
   });
 
-  registerRoutes(app, deps.accounts);
+  const requireAuth = createRequireAuth(deps.accounts);
+  registerRoutes(app, deps.accounts, requireAuth);
+  registerProjectRoutes(app, requireAuth, deps.projects);
+  registerTaskRoutes(app, requireAuth, deps.tasks, deps.attachmentsDir);
   return app;
 }

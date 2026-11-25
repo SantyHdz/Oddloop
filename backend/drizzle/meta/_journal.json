@@ -15,6 +15,13 @@
       "when": 1795542346884,
       "tag": "0001_oval_inhumans",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795548538043,
+      "tag": "0002_parallel_turbo",
+      "breakpoints": true
     }
   ]
 }

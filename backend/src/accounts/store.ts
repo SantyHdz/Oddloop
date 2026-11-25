@@ -1,14 +1,9 @@
 import { and, count, eq, gt, lt, ne } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { AppError } from "../errors.js";
+import { isUniqueViolation } from "../db/types.js";
 import { auditLog, sessions, users } from "../db/schema.js";
 import type { Store } from "./types.js";
-
-// Drizzle wraps the driver error, so look for the PostgreSQL code in both places.
-function isUniqueViolation(error: unknown) {
-  const e = error as { code?: string; cause?: { code?: string } };
-  return e.code === "23505" || e.cause?.code === "23505";
-}
 
 export function createDrizzleStore(db: NodePgDatabase): Store {
   return {

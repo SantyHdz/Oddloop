@@ -1,19 +1,19 @@
-import { beforeEach, describe, expect, it } from "vitest";
-import { createAccounts } from "./accounts/service.js";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import type { Role } from "./accounts/types.js";
-import { buildApp } from "./app.js";
-import { createMemoryStore, fakeHasher } from "./testing/memory-store.js";
+import { createTestApp } from "./testing/test-app.js";
 
-let mem: ReturnType<typeof createMemoryStore>;
-let app: ReturnType<typeof buildApp>;
+let t: Awaited<ReturnType<typeof createTestApp>>;
+let app: typeof t.app;
 
-beforeEach(() => {
-  mem = createMemoryStore();
-  app = buildApp({ checkDb: async () => {}, accounts: createAccounts(mem.store, fakeHasher) });
+beforeAll(async () => {
+  t = await createTestApp();
+  app = t.app;
 });
+afterAll(() => t.close());
+beforeEach(() => t.reset());
 
 const addUser = (role: Role, email: string, mustChangePassword = false) =>
-  mem.store.insertUser({ email, name: email, role, passwordHash: "hashed:pw", mustChangePassword });
+  t.store.insertUser({ email, name: email, role, passwordHash: "hashed:pw", mustChangePassword });
 
 async function login(email: string, password = "pw") {
   const res = await app.inject({ method: "POST", url: "/api/auth/login", payload: { email, password } });

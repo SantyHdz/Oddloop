@@ -1,17 +1,9 @@
-import type { FastifyInstance, FastifyRequest } from "fastify";
+import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import type { Accounts } from "./accounts/service.js";
 import { roles, type User } from "./accounts/types.js";
-import { AppError } from "./errors.js";
+import { COOKIE, type RequireAuth } from "./auth/hook.js";
 
-declare module "fastify" {
-  interface FastifyRequest {
-    user?: User;
-    sessionToken?: string;
-  }
-}
-
-const COOKIE = "oddloop_session";
 const SESSION_SECONDS = 7 * 24 * 60 * 60;
 
 const password = z.string().min(1).max(1024);
@@ -30,21 +22,7 @@ const toPublic = (u: User) => ({
   soundEnabled: u.soundEnabled,
 });
 
-export function registerRoutes(app: FastifyInstance, accounts: Accounts) {
-  // Loads the user from the session cookie. While a temporary password is still in
-  // place, only routes that opt in (change password, logout, who am I) are reachable.
-  const requireAuth = (allowTemporaryPassword = false) =>
-    async function (request: FastifyRequest) {
-      const token = request.cookies[COOKIE];
-      const user = token ? await accounts.authenticate(token) : undefined;
-      if (!token || !user) throw new AppError(401, "unauthenticated", "Login required");
-      if (user.mustChangePassword && !allowTemporaryPassword) {
-        throw new AppError(403, "password_change_required", "Change your temporary password first");
-      }
-      request.user = user;
-      request.sessionToken = token;
-    };
-
+export function registerRoutes(app: FastifyInstance, accounts: Accounts, requireAuth: RequireAuth) {
   // SameSite=Lax keeps the cookie off cross-site POSTs; JSON-only bodies add a second barrier.
   // No `secure` flag: the app is served over plain http on the local network.
   app.post("/api/auth/login", async (request, reply) => {
